@@ -24,14 +24,17 @@ export default async function (req, res) {
     });
     return;
   }
-
   try {
-    const completion = openai.ChatCompletion.create(
-      model="gpt-3.5-turbo",
-      messages=[
-            {"role": "system", "content": text},
-        ]
-    )
+    const completion = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: text,
+      temperature: 0.9,
+      max_tokens: 150,
+      top_p: 1,
+      frequency_penalty: 0.0,
+      presence_penalty: 0.6,
+      stop: [" Human:", " AI:"],
+    });
     res.status(200).json({ result: completion.data.choices[0].content });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
